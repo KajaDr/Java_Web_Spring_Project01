@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import pl.cyber.trainess.demo.dto.ListaRequest;
 import pl.cyber.trainess.demo.dto.OneStringRequest;
+import pl.cyber.trainess.demo.dto.RozwiazanieRownaniaRequest;
 import pl.cyber.trainess.demo.dto.StringRequest;
 import pl.cyber.trainess.demo.service.BasicsService;
 import pl.cyber.trainess.demo.service.KalkulatorService;
@@ -11,6 +12,8 @@ import pl.cyber.trainess.demo.service.PDbasicService;
 import pl.cyber.trainess.demo.service.ZnajdzService;
 
 import java.util.List;
+
+import static org.apache.coyote.http11.Constants.a;
 
 @RestController
 @RequestMapping("/v1/basics") // mapowanie do postmana // Tomcat started on port(s): >> 8150 (http)<< with context path '/demo'
@@ -20,7 +23,7 @@ public class BasicController {
     private final BasicsService basicsService; // działa dzieki : @RequiredArgsConstructor
 
     private final ZnajdzService znajdzLiczbe;
-
+private  final PDbasicService  pDbasicService;
 
     /*
       Zadanie 1
@@ -188,7 +191,7 @@ t - 1
     public Integer getZadanie7(
             @PathVariable final Integer a,
             @PathVariable final Integer b){
-        return PDbasicService.sumaLiczb(a,b);
+        return pDbasicService.sumaLiczb(a,b);
     }
 
 
@@ -219,11 +222,11 @@ t - 1
   if do sprawdzenia czy liczba z listy jest ujemna czy jest dodatnia
  .sort do sortowania listy
   */
-    @GetMapping("/zadanie-8")
-    public Integer getZadanie8(
+    @PostMapping("/zadanie-8")
+    public String getZadanie8(
             @RequestBody final ListaRequest request)
     {
-        return PDbasicService.getZadanie8(request);
+        return pDbasicService.getZadanie8(request);
     }
 
     //endregion
@@ -247,6 +250,25 @@ eden pierwiastek. Wynik: xxxx
     // Post RequestBody ( z własnym obiektem DTO)
      */
 
+    @GetMapping("/zadanie-9/{a}/{b}/{c}")
+        public String getZadanie9(
+                @PathVariable("a") final Integer a,
+                @PathVariable("b") final Integer b,
+                @PathVariable("c") final Integer c){
+        return pDbasicService.getZadanie9(a,b,c);
+    }
+
+    @PostMapping("/zadanie-9a")
+    public String getZadanie9a(
+            @RequestBody final RozwiazanieRownaniaRequest request) {
+        return pDbasicService.rozwiazanieRownania(request);
+    }
+
+    @PostMapping("/zadanie-9a-zaokraglenia")
+    public String getZadanie9a(
+            @RequestBody final RozwiazanieRownaniaRequest2 request) {
+        return pDbasicService.rozwiazanieRownaniaZaokraglenia(request);
+    }
     //KalkulatorService
     //endregion
 
