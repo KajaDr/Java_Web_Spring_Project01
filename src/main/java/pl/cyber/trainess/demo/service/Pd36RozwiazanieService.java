@@ -106,7 +106,7 @@ public class Pd36RozwiazanieService {
         Double sred = 0.0;
         for (Integer ele : lista
         ) {
-            suma += ele + suma;
+            suma += ele;
             sred = (double) Math.divideExact(suma,a);
 
         }
