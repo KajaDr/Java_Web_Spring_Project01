@@ -143,7 +143,7 @@ public class Pd36RozwiazanieService {
 
         txt.append(lista)
                 .append("\nwartosc min :").append(lista.get(min))
-                .append(" \t wartosc max : ").append(lista.get(0))
+                .append(" \t wartosc max  : ").append(lista.get(0))
                 .append(" \t srednia z liczb losowych: ").append(sred);
         // srednia nie liczy prawidlowo
         return txt.toString();
