@@ -23,10 +23,11 @@ public class BasicController {
     private final BasicsService basicsService; // działa dzieki : @RequiredArgsConstructor
 
     private final ZnajdzService znajdzLiczbe;
-private  final PDbasicService  pDbasicService;
+    private final PDbasicService pDbasicService;
 
+    //region Zadanie 1
     /*
-      Zadanie 1
+
       Napisać zapytania dla prostego kalkulatora, który będzie obsługiwać 5 operacji
       (każda z nich powinna być oddzielnym zapytaniem restowym)
       Operacje:
@@ -83,7 +84,9 @@ private  final PDbasicService  pDbasicService;
             @PathVariable("b") final Integer liczbaB) {
         return kalkulatorService.getModulo(liczbaA, liczbaB);
     }
-//region Zadanie 02
+
+    //endregion
+    //region Zadanie 02
     /*
 
     Napisz zapytanie restowe, którego zadaniem będzie wykonywanie sprawdzenia czy przekazana liczba jest liczba pierwszą
@@ -159,21 +162,21 @@ t - 1
     @PostMapping("/dzielnik- liczby/{a}/{b}")
     public String getDzielnik(
             @PathVariable("a") final Integer a,
-            @PathVariable("b") final Integer b ){
-                return kalkulatorService.getDzielnik(a,b);
+            @PathVariable("b") final Integer b) {
+        return kalkulatorService.getDzielnik(a, b);
     }
 
     @PostMapping("/dzielnik- liczby2")
     public String getDzielnik2(
             @RequestParam("a") final Integer a,
-            @RequestParam("b") final Integer b ){
-        return kalkulatorService.getDzielnik(a,b);
+            @RequestParam("b") final Integer b) {
+        return kalkulatorService.getDzielnik(a, b);
     }
 
-    @PostMapping ("/zgadnij-liczbe")
+    @PostMapping("/zgadnij-liczbe")
     public String getZgadnijLiczbe(
-            @RequestParam ("a") final Integer a
-    ){
+            @RequestParam("a") final Integer a
+    ) {
         return znajdzLiczbe.getLiczba(a);
     }
 
@@ -190,8 +193,8 @@ t - 1
     @GetMapping("/zadanie-7/{a}/{b}")
     public Integer getZadanie7(
             @PathVariable final Integer a,
-            @PathVariable final Integer b){
-        return pDbasicService.sumaLiczb(a,b);
+            @PathVariable final Integer b) {
+        return pDbasicService.sumaLiczb(a, b);
     }
 
 
@@ -199,7 +202,7 @@ t - 1
     //endregion
 
 
- //robienie folderu //region na poczatku
+    //robienie folderu //region na poczatku
     // endregion + CTRL +.
 
     //region Zadanie8
@@ -224,8 +227,7 @@ t - 1
   */
     @PostMapping("/zadanie-8")
     public String getZadanie8(
-            @RequestBody final ListaRequest request)
-    {
+            @RequestBody final ListaRequest request) {
         return pDbasicService.getZadanie8(request);
     }
 
@@ -251,11 +253,11 @@ eden pierwiastek. Wynik: xxxx
      */
 
     @GetMapping("/zadanie-9/{a}/{b}/{c}")
-        public String getZadanie9(
-                @PathVariable("a") final Integer a,
-                @PathVariable("b") final Integer b,
-                @PathVariable("c") final Integer c){
-        return pDbasicService.getZadanie9(a,b,c);
+    public String getZadanie9(
+            @PathVariable("a") final Integer a,
+            @PathVariable("b") final Integer b,
+            @PathVariable("c") final Integer c) {
+        return pDbasicService.getZadanie9(a, b, c);
     }
 
     @PostMapping("/zadanie-9a")
@@ -265,11 +267,98 @@ eden pierwiastek. Wynik: xxxx
     }
 
     @PostMapping("/zadanie-9a-zaokraglenia")
-    public String getZadanie9a(
-            @RequestBody final RozwiazanieRownaniaRequest2 request) {
+    public String getZadanie9b(
+            @RequestBody final RozwiazanieRownaniaRequest request) {
         return pDbasicService.rozwiazanieRownaniaZaokraglenia(request);
     }
+
     //KalkulatorService
     //endregion
+    //region zadanie 10a
+    /*
+    Za pomoca instrukcji petli for dla danych wartosci x zmieniający sie od 0 do 10 obliczamy wartości funkcji y=3x
+     */
+    @GetMapping("/zadanie10a")
+    public String zadanie10a() {
+        return kalkulatorService.zadanie10a();
+    }
+// endregion
 
+    //region zadanie 10b
+    /*
+    Za pomoca instrukcji petli do while dla danych wartosci x zmieniający sie od 0 do 10 obliczamy wartości funkcji y=3x
+     */
+    @GetMapping("/zadanie10b")
+    public String zadanie10b() {
+        return kalkulatorService.zadanie10b();
+    }
+
+    // endregion
+    // region zadanie 10c
+    /*
+    Za pomoca instrukcji petli  while dla danych wartosci x zmieniający sie od 0 do 10 obliczamy wartości funkcji y=3x
+     */
+    @GetMapping("/zadanie10c")
+    public String zadanie10c() {
+        return kalkulatorService.zadanie10c();
+    }
+// endregion
+
+    //region zadanie 11a
+    /*
+    Napisac program, który przy pomocy pętli for przekaże nam wyniki tabliczki mnożenia od 1 do 199
+    Potrzebujemy 2 pętli for
+     */
+    @GetMapping("/zadanie11a")
+    public String zadanie11a() {
+        return kalkulatorService.zadanie11a();
+    }
+
+    @GetMapping("/zadanie11b")
+    public String zadanie11b() {
+        return kalkulatorService.zadanie11b();
+    }
+
+    //endregion
+//region zadanie 11c
+    /*
+    Napisac program, który przy pomocy pętli do... while przekaże nam wyniki tabliczki mnożenia od 1 do 100
+
+    do{
+    ustawienie parametru dla kolumny
+        do{ mnozenie
+            inkrementacja
+        }while()
+        new line
+        inkrementacja dla wierszy
+    }while()
+     */
+    @GetMapping("/zadanie11c")
+    public String getZadanie11c() {
+        return kalkulatorService.zadanie11c();
+    }
+    //endregion
+
+    //region Zadanie11c
+  /*
+    Napisać program, który przy pomocy pętli while przekaże nam wyniki tabliczki mnożenia od 1 do 100
+
+    2 pętle while
+
+  while () { //wiersze
+  //pierwotne ustawienie parametru dla kolumny
+    while() { // kolumny
+    //mnozenie
+    //inkrementacja klumny
+    }
+  //new line
+  //inkrementacja dla wierszy
+  }
+*/
+    @GetMapping("/zadanie11d")
+    public String getZadanie11d() {
+        return kalkulatorService.zadanie11d();
+    }
+
+    //endregion
 }
