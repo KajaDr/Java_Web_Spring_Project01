@@ -131,14 +131,21 @@ public class Pd36RozwiazanieService {
             lista.add(x);
             i++;
         }while (i<a);
-        int min= a-1;
+        int min = a - 1;
+        Integer suma = 0;
+        Double sred = 0.0;
+        for (Integer ele : lista
+        ) {
+            suma += ele + suma;
+            sred = (double) Math.divideExact(suma,a);
 
- lista.sort(Comparator.reverseOrder());
+        }
 
         txt.append(lista)
-                .append("\nwartosc min :")
-                .append(lista.get(min))
-                .append(" \t wartosc max: ").append(lista.get(0));
- return txt.toString();
+                .append("\nwartosc min :").append(lista.get(min))
+                .append(" \t wartosc max: ").append(lista.get(0))
+                .append(" \t srednia z liczb losowych: ").append(sred);
+        // srednia nie liczy prawidlowo
+        return txt.toString();
     }
 }
