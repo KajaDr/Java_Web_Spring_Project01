@@ -1,0 +1,309 @@
+select concat('a','b','c','d');
+select concat('admin','14','@','gmail','.','com');
+select concat ('admin',NULL,'admin');
+
+select 'admin' || ' ' || 'admin' as Result;
+select 5+3 as result;
+select now() as result;
+
+ Tworzenie :
+ create table szkolenie(
+ id         integer,
+ nazwisko   varchar,
+ primary key (id)
+ );
+
+Dodawanie elementow:
+insert into szkolenie (id, imie, nazwisko) values (1, 'Mariusz', 'Tanski');
+
+sprawdzanie tabeli:
+select *from szkolenie;
+
+sprawdzanie kolumny :
+select imie from szkolenie;
+
+łaczenie tabel:
+
+select concat(imie,' ', nazwisko) from szkolenie;
+
+szukanie elementów :
+select * from szkolenie where imie like '%art%' -> mARTA
+select * from szkolenie where imie like 'M%a' ->Marta % pozostał
+select * from szkolenie where lower imie like lower 'M%a' po małych literach
+
+dodawanie nowych kolumn:
+alter table szkolenie add column miasto varchar(255)
+dodawanie nowych elementów do kolumn:
+update szkolenie set miasto= 'Krakow' where imie like '%ta'; -- dodawanie wartosci do kolumn
+
+Wyświetlanie danych:
+select*from szkolenie order by nazwisko desc;
+
+asc - rosnacąco
+desc - malejąco
+
+select*from szkolenie where imie like '%ta'  <--- szukanie po imiona z koncowka %ta
+order by miasto desc, nazwisko asc;
+
+create table przychody(
+id_uzytkownika 		varchar(255),
+przychody 		    integer
+);-- jak jest pojedyncze zapytanie do bazy nie wymaga srednika
+select*from szkolenie order by nazwisko desc;
+
+
+DELETE from przychody --- tego nie robic w taki sposob  !
+DELETE from przychody where id_uzytkownika='1', -- jak chcemy usunac jakiegos użytkownika
+
+
+--dodawanie elementow do konkretnych kolumn
+insert into przychody (id_uzytkownika, przychody)
+VALUES
+(3, 8000),
+(1, 1000),
+(2, 10000),
+(6, 7000),
+(4, 12000),
+(5, 5000) -- jak jest pojedyncze zapytanie nie potrzeba srednika
+
+alter table przychody -- do modyfikacji tabeli
+alter column id_uzytkownika type integer -- modyfikacja kolumn zmiana na integer
+using cast (id_uzytkownika as integer); -- inna metoda na modyfikacje zmian
+
+-- sklejanie tabel
+select sz.imie, sz.nazwisko, prz.przychody -- zamiast * jako pobranie elementow
+from szkolenie sz
+left join przychody prz
+on sz.id=cast(prz.id_uzytkownika as Integer)
+where sz.id=1; -- jak chcemy zobaczyc jaka to osoba
+
+WHERE  prz.przychody<5000 <-- tez mozna sortowac po konkretnych wartosciach
+
+
+
+SELECT sz.imie, sz. nazwisko, prz.przychody
+FROM szkolenie sz
+left join przychody prz on sz.id=prz.id_uzytkownika
+where sz.id in (1,2,3);
+-- in mowi ze w tym miejscu podajemy liste obietów ktore chcemy szukac
+where sz.id =1 or sz.id = 2 -- inna metoda
+where sz.id =(1) or sz.id=2 and prz.przychody=1000;
+
+-- moga byc zastosowane nawiasy do sprecyzowania co dokladnie szukamy
+where (sz.id = 1 and prz.przychody =1000)
+or (sz.id= 2 and prz.przychody=10000)
+
+-- jak nie chcemy rekordu  zobaczyc
+where sz.id not in (1,2);
+-- inna metoda:
+where sz.id !=(1) and sz.id!=2;
+
+Metody :
+LENGTH(sz.nazwisko) as dlugosc_nazwiska - liczy ilosc znakow
+distinct(sz.imie) - wyszukanie unikalnych wartosci
+prz.przychody/-2 -- obliczenia  matematyczne
+@(prz.przychody*-1) -- modul
+sz.imie, sz.nazwisko,@(prz.przychody*-1) as podzielone -- AS pozwala dodac nowa kolumne z wartosciami
+||/25.0, 2.0^3.0, 5! -- ||/25.0 pierwiastki as p3, ^ potegi, ! silnia, % pozostałosc z dzielenia
+random() - losowanie liczb od 0-1;
+
+INNE DZIALANIA:
+--GOUP BY- sumowanie podobnychh recordow
+SELECT
+sz.miasto, sum(prz.przychody)
+FROM szkolenie sz
+left join przychody prz on sz.id=prz.id_uzytkownika
+GROUP BY  sz.miasto -- musi byc zawsze na koncu, OKRESLAJAC PO CZYM GRUPUJEMY
+;
+--HAVING + count
+SELECT
+sz.miasto, sum(prz.przychody), count(sz.imie)
+FROM szkolenie sz
+left join przychody prz on sz.id=prz.id_uzytkownika
+GROUP BY  sz.miasto -- musi byc zawsze na koncu, OKRESLAJAC PO CZYM GRUPUJEMY
+HAVING count(sz.imie)>0 -- sumowanie osob ktore biora udziałw danym sumowaniu okreslajac jakie recordy pokazujemy.
+ --Tzn jesli jest wiecej niz 1 record spelniajacy ta zaleznosc tabela pokaze
+;
+22.09
+select random()*100+10;
+-- + 10 w przedziale od 10-110
+select round(4.1131);
+select md5(random()::text) -- liczba wygenerowana w formacie md5,generuje ciąg znaków jako generator hasła
+select 12345:: text;  konwertuje liczbe na text
+select generate_series(1,10) as id, md5(random()::text)as md5_hash
+
+--TWORZENIE INDEKSOW
+--CREATE index sz_imie_idx on szkolenie (imie);
+--CREATE UNIQUE index prz_id_uzytkowmola_idx on przychody(id_uzytkownika);
+--drop index prz_id_uzytkowmola_idx; -- jak chcemy usunac index
+--CREATE index if not exists sz_imie_idx on szkolenie (imie); TWORZENIE INDEKSU UNIKAJAC DUBLOWANIA SIE
+
+--TWORZENIE KONSTREINOW
+--alter index sz_imie_idx rename to szkolenie_imie_idx;
+--alter table przychody
+--add constraint fk_przychody_szkolenie
+--FOREIGN KEY ( id_uzytkownika)
+--references szkolenie(id);
+
+--alter table przychody
+--drop CONSTRAIN fk ( cooos ale nie zdazyłam)
+
+https://dbfiddle.uk/Ho4tsJ0s - strona do cwiczen bazodanowych
+https://generatedata.com/generator
+
+________________________ projekt________________
+-- projektowanie bazy danych
+-- od ogolu do szczegołu od tabeli co jest najmniej wazna
+-- projektowanie bazy danych
+-- od ogolu do szczegołu od tabeli co jest najmniej wazna
+create table przedmiot(
+id		serial PRIMARY KEY,-- serial taki integer, dodaje poprzedni rekord do nasteonego
+nazwa 	varchar (255) not null (jak nie chcemy aby było nullów)
+);
+create table sala(
+id		serial PRIMARY KEY,
+numer	integer,
+pietro	integer
+);
+create table nauczyciel (
+id			serial primary key,
+imie		varchar(255),
+nazwisko 	varchar (255),
+data_ur		timestamp --liczony od 1972
+);
+create table klasa(
+id			serial primary key,
+numer		integer
+);
+create table uczen(
+id			serial primary key,
+imie		varchar(255),
+nazwisko 	varchar (255),
+data_ur		timestamp, --liczony od 1972
+klasa_id	integer,
+CONSTRAINT fk_uczen_klasa
+foreign key (klasa_id)
+references klasa(id)
+);
+create table plan(
+id				serial primary key,
+klasa_id		integer,
+przedmiot_id	integer,
+nauczyciel_id	integer,
+sala_id 		integer,
+dzien			varchar(50),
+nr_lekcji		integer
+);
+
+alter table plan
+add constraint fk_plan_klasa
+foreign key (klasa_id)
+references klasa(id);
+
+alter table plan
+add constraint fk_plan_przedmiot
+foreign key (przedmiot_id)
+references przedmiot(id);
+
+alter table plan
+add constraint fk_plan_nauczyciel
+foreign key (nauczyciel_id)
+references nauczyciel(id);
+
+alter table plan
+add constraint fk_plan_sala
+foreign key(sala_id)
+references sala (id);
+
+INSERT INTO klasa (id,numer)
+VALUES
+  (1,1),
+  (2,2),
+  (3,3),
+  (4,4),
+  (5,5),
+  (6,6);
+
+
+
+INSERT INTO uczen (id,imie,nazwisko,data_ur,klasa_id)
+VALUES
+  (1,'Tymoteusz','Duk',to_date('29-09-2002', 'dd-MM-yyyy'),4),
+  (2,'Michał','Florkiewicz',to_date('22-04-2001', 'dd-MM-yyyy'),3),
+  (3,'Tymoteusz','Janosz',to_date('04-07-2002', 'dd-MM-yyyy'),4),
+  (4,'Krystyna','Soboń',to_date('14-04-2003', 'dd-MM-yyyy'),5),
+  (5,'Paulina','Iwańska',to_date('18-04-2005', 'dd-MM-yyyy'),1),
+  (6,'Patryk','Błach',to_date('06-02-2002', 'dd-MM-yyyy'),4),
+  (7,'Karol','Korczak',to_date('27-08-2002', 'dd-MM-yyyy'),2),
+  (8,'Patryk','Iwański',to_date('15-02-2002', 'dd-MM-yyyy'),6),
+  (9,'Michał','Kosior',to_date('14-02-2003', 'dd-MM-yyyy'),5),
+  (10,'Michał','Florkiewicz',to_date('10-09-2001', 'dd-MM-yyyy'),5);
+INSERT INTO uczen (id,imie,nazwisko,data_ur,klasa_id)
+VALUES
+  (11,'Katarzyna','Hołda',to_date('25-11-2000', 'dd-MM-yyyy'),5),
+  (12,'Katarzyna','Stefanek',to_date('23-02-2004', 'dd-MM-yyyy'),2),
+  (13,'Katarzyna','Janosz',to_date('23-12-2003', 'dd-MM-yyyy'),3),
+  (14,'Karol','Stefanek',to_date('19-10-2001', 'dd-MM-yyyy'),4),
+  (15,'Katarzyna','Duk',to_date('06-03-2005', 'dd-MM-yyyy'),2),
+  (16,'Paulina','Leśniewska',to_date('16-05-2003', 'dd-MM-yyyy'),4),
+  (17,'Katarzyna','Hołda',to_date('27-01-2003', 'dd-MM-yyyy'),4),
+  (18,'Karol','Hołda',to_date('05-08-2000', 'dd-MM-yyyy'),5),
+  (19,'Paulina','Iwańska',to_date('17-12-2003', 'dd-MM-yyyy'),3),
+  (20,'Krystyna','Korczak',to_date('31-12-2002', 'dd-MM-yyyy'),5);
+
+INSERT INTO nauczyciel (id,imie,nazwisko,data_ur)
+VALUES
+  (1,'Katarzyna','Soboń',to_date('15-06-1977', 'dd-MM-yyyy')),
+  (2,'Paulina','Stefanek',to_date('22-02-1976', 'dd-MM-yyyy')),
+  (3,'Katarzyna','Korczak',to_date('13-11-1976', 'dd-MM-yyyy')),
+  (4,'Paulina','Leśniewska',to_date('01-02-1977', 'dd-MM-yyyy')),
+  (5,'Karol','Kosior',to_date('07-07-1976', 'dd-MM-yyyy'));
+
+
+INSERT INTO przedmiot (id,nazwa)
+VALUES
+  (1,'matematyka'),
+  (2,'geografia'),
+  (3,'j.angielski'),
+  (4,'chemia'),
+  (5,'matematyka');
+
+
+INSERT INTO sala (id,numer,pietro)
+VALUES
+  (1,1,1),
+  (2,2,1),
+  (3,3,1),
+  (4,4,2),
+  (5,5,2);
+INSERT INTO plan (id,klasa_id,przedmiot_id,nauczyciel_id,sala_id,dzien,nr_lekcji)
+VALUES
+  (1,2,2,5,3,'wtorek',6),
+  (2,3,5,5,2,'wtorek',8),
+  (3,4,3,5,3,'wtorek',8),
+  (4,1,3,5,3,'poniedzialek',7),
+  (5,3,1,2,3,'czwartek',6),
+  (6,2,5,2,5,'poniedzialek',6),
+  (7,4,4,5,3,'poniedzialek',9),
+  (8,5,5,4,1,'wtorek',9),
+  (9,3,3,1,3,'wtorek',10),
+  (10,2,3,3,2,'wtorek',9);
+INSERT INTO plan (id,klasa_id,przedmiot_id,nauczyciel_id,sala_id,dzien,nr_lekcji)
+VALUES
+  (11,3,2,2,1,'sroda',2),
+  (12,4,5,3,2,'wtorek',8),
+  (13,4,4,2,1,'sroda',10),
+  (14,2,4,5,4,'wtorek',6),
+  (15,3,3,4,4,'sroda',6),
+  (16,3,3,5,5,'sroda',1),
+  (17,3,4,5,4,'czwartek',10),
+  (18,4,2,2,3,'sroda',5),
+  (19,2,2,2,3,'wtorek',2),
+  (20,3,2,1,3,'wtorek',2);
+------------------
+select u.imie|| ' ' || u.nazwisko as uczen_nazwa ,k.numer
+from uczen u
+left join klasa k on k.id= u.klasa_id
+--where u.klasa_id =1 or u.klasa_id=6;
+-- where u.klasa_id in (1,6)
+WHERE u.klasa_id in ( SELECT number from klasa where id=1 or id = 6); -- zagnierzdzone selecty, nie sa bezpieczne

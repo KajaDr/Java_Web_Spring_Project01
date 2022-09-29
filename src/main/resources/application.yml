@@ -2,3 +2,54 @@ server:
   port: 8150
   servlet:
     context-path: /demo
+
+spring:
+  datasource:
+    url: jdbc:postgresql://185.204.217.194:5432/kd_db
+    username: karolinad
+    password: kd-12345
+    #localhost - baza danych na lokalnych PC
+    #127.0.0.1 - baza danych na lokalnych PC
+    #db.google.com - baza w serwerowni Google
+    #Adres IP publiczny
+    # com - domena, google - subdomena
+    #5432 - bazapostgresowa
+
+   #spring: konfiguracja dla Spring Boot'a
+    #  datasource: konfiguracja pod połączenie pod bazy danych
+     #   url:  podanie sciezki do serwera DB
+      #jdbc: wskazanie użycia sterownika do połączeń z bazą danych
+    #postgerql: informacja który konkretny sterownik uzywamy. jednoczesnie informacja o protokole połączeniowym. Jak w przypadku stron WWW mamy http:// lub https://
+
+    #//185.204.217.194:adres IP pod którym dostepna jest baza danych. Mozliwe konfiguracje zostały podane wyzej
+    #5432 -> standardowy port połączeniowy do serwerow z baza danych PostgresSQL
+    #dla www opartych o protokół http port 80
+      #dla www opartych o protokół https port 443
+    #/kd_db - nazwa bazy danych do ktorej mamy dostep
+  jpa: # otwarcie kontekstu do konfiguracji JPA, czyli mechanizmu wspomagającego
+    #        tworzenie zapytań SQL do bazy
+    hibernate: # konfiguracja mechanizmu, który 'rozmawia' z DB poprzez zapytania SQL
+      ddl-auto: validate # konfiguracja sprawdzająca strukturę DB
+      use-new-id-generator-mappings: true # mechanizm dzięki, któremu będziemy generować
+      #wartości dla id (primary key) naszych tabel
+    database-platform: org.hibernate.dialect.PostgreSQLDialect # ustalenie języka rozmowy z DB
+    show-sql: true # konfiguracja aby zapytania SQL z app zostały wyświetlone w konsoli
+    properties:
+      hibernate:
+        format_sql: true # parametr ma za zadanie ładnie przedstawić zapytanie SQL w konsoli
+        temp:
+          use_jdbc_metadata_defaults: false
+  liquibase:
+    enabled: true # włączamy mechanizm liquibase, aby mógł za nas utworzyć strukturę DB
+    drop-first: false # zanim uruchomi się app to zostanie usunięta struktura DB
+    # i ponownie założona
+
+logging:
+  level:
+    org:
+      hibernate:
+        type:
+          descriptor:
+            sql: trace # dostepne opcje INFO TRACE DEBUG
+            # info - bedzie podstawowa informacja o parametrach w zapytaniach SQL
+            #Trace - informacje o parametrach oraz ich wartosci
