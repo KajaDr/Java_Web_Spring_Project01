@@ -28,12 +28,14 @@ public class BankomatEntry {
    @Setter
     @Column (name= "NAME")
     private String name;
+   @Setter
     @Column(name = "SALDO")
     private BigDecimal saldo;
     @Column (name = "MIASTO")
     private String miasto;
     @Column (name = "ULICA")
     private String ulica;
+    @Setter
     @Column (name = "CZY_AKTYWNY")
     private Boolean czyAktywny;
 

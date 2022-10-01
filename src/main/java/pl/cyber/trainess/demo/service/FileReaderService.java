@@ -8,6 +8,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -21,6 +23,21 @@ public class FileReaderService {
             throw new RuntimeException(("Read file failed")+e);
         }
         //parse file to  BankomatDTO
+
+        List<BankomatDTO> result = new ArrayList<>();
+        while (scanner.hasNext()){
+            String rowInFile= scanner.nextLine();
+            String[]tabRowInFile=rowInFile.split(","); // tabRowInFile - rozbija nam tablice na wartosc
+            // ktore pozniej wywołuje się z buildera i są stringami
+
+            result.add(BankomatDTO.builder()
+                            .name(tabRowInFile[0])
+                            .saldo(new BigDecimal(tabRowInFile[2]))
+                            .miasto(tabRowInFile[2])
+                            .ulica(tabRowInFile[3])
+                            .czyAktywny(Boolean.valueOf(tabRowInFile[4]))
+                    .build());
+        }
         return null;
     }
 
